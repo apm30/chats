@@ -41,11 +41,14 @@ const useStyles = makeStyles(theme => ({
 export default function Dashboard() {
 	const classes = useStyles();
 
+	//CTX Store
 	const [allChats] = React.useContext(CTX);
+	const topics = Object.keys(allChats);
 
-	console.log('allChats', allChats);
-
+	//local state
 	const [textValue, changeTextValue] = React.useState('');
+	const [activeTopic, changeActiveTopic] = React.useState(topics[0]);
+
 	return (
 		<div>
 			<Paper className={classes.root}>
@@ -53,23 +56,29 @@ export default function Dashboard() {
 					Chat app
 				</Typography>
 				<Typography variant="h5" component="h5">
-					Topic placeholder
+					{activeTopic}
 				</Typography>
 				<div className={classes.flex}>
 					<div className={classes.topicsWindow}>
 						<List component="nav" aria-label="Main mailbox folders">
-							{['asdasd', 'qweqwe'].map(topic => (
-								<ListItem key={topic} button>
+							{topics.map(topic => (
+								<ListItem
+									onClick={e => changeActiveTopic(e.target.innerText)}
+									key={topic}
+									button
+								>
 									<ListItemText primary={topic} />
 								</ListItem>
 							))}
 						</List>
 					</div>
 					<div className={classes.chatWindow}>
-						{[{ from: 'user', message: 'hello' }].map((chat, i) => (
+						{allChats[activeTopic].map((chat, i) => (
 							<div className={classes.flex} key={i}>
 								<Chip label={chat.from} className={classes.chip} />
-								<Typography variant="p">{chat.message}</Typography>
+								<Typography variant="body1" gutterBottom>
+									{chat.msg}
+								</Typography>
 							</div>
 						))}
 					</div>
